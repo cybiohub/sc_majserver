@@ -4,12 +4,12 @@
 # * Creation:           (c) 2004-2021  Cybionet - Ugly Codes Division
 # *
 # * File:               majserver.sh
-# * Version:            0.1.12b
+# * Version:            0.1.12c
 # *
 # * Comment:            Tool to configure update system.
 # *
 # * Date: December 16, 2017
-# * Modification: November 25, 2021
+# * Modification: December 18, 2021
 # *
 # * **************************************************************************
 # * chmod 500 majserver.sh
@@ -42,7 +42,7 @@ readonly appVersion='0.1.12b'
 # ## VERIFICATION
 
 # ## Check if the script are running under root user.
-if [ "${EUID}" -ne '0' ] ; then
+if [ "${EUID}" -ne 0 ] ; then
  echo -e "\n\e[34m${appHeader}\e[0m\n"
  echo -e "\n\n\n\e[33mCAUTION: This script must be run as root.\e[0m"
  exit 0
