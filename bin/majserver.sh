@@ -1,15 +1,16 @@
 #! /bin/bash
 #set -x
 # * **************************************************************************
-# * Creation:           (c) 2004-2021  Cybionet - Ugly Codes Division
+# *
+# * Creation:           (c) 2004-2022  Cybionet - Ugly Codes Division
 # *
 # * File:               majserver.sh
-# * Version:            0.1.12c
+# * Version:            0.1.13c
 # *
 # * Comment:            Tool to configure update system.
 # *
-# * Date: December 16, 2017
-# * Modification: December 18, 2021
+# * Creation: December 16, 2017
+# * Change:   February 13, 2021
 # *
 # * **************************************************************************
 # * chmod 500 majserver.sh
@@ -17,7 +18,7 @@
 
 
 #############################################################################################
-# ## CONSTANTS
+# ## CUSTOM VARIABLES
 
 # ## Location of the log file.
 readonly APTLOG='/var/log/maj-update.log'
@@ -30,26 +31,40 @@ readonly FORCEIPV4='-o Acquire::ForceIPv4=true'
 # ## VARIABLES
 
 # ## Retrieval of date and year
-aptDate=$(date +%Y-%m-%d)
+aptDate=$(date +'%b %d %H:%M:%S')
 appYear=$(date +%Y)
 
 # ## Application informations.
 appHeader="(c) 2004-${appYear}  Cybionet - Ugly Codes Division"
-readonly appVersion='0.1.12b'
+readonly appVersion='0.1.13c'
 
 
 #############################################################################################
 # ## VERIFICATION
 
-# ## Check if the script are running under root user.
+# ## Check if the script are running with sudo or under root user.
 if [ "${EUID}" -ne 0 ] ; then
- echo -e "\n\e[34m${appHeader}\e[0m\n"
- echo -e "\n\n\n\e[33mCAUTION: This script must be run as root.\e[0m"
- exit 0
+  echo -e "\n\e[34m${appHeader}\e[0m\n"
+  echo -e "\n\n\n\e[33mCAUTION: This script must be run with sudo or as root.\e[0m"
+  exit 0
 else
- echo -e "\n\e[34m${appHeader}\e[0m\n"
+  echo -e "\n\e[34m${appHeader}\e[0m\n"
+  printf '%.s─' $(seq 1 "$(tput cols)")
+  echo -e ""
 fi
 
+if [ ! -f '/etc/logrotate.d/majserver' ]; then
+  echo -e "${APTLOG} {
+        yearly
+	size 10M
+        missingok
+        rotate 10
+        compress
+        delaycompress
+        notifempty
+        create 640 root adm
+}" > /etc/logrotate.d/majserver
+fi
 
 #############################################################################################
 # ## FUNCTIONS
@@ -57,7 +72,7 @@ fi
 # ## Show warning to remember to take snapshot.
 function reminderCheck() {
  echo -n -e "\e[38;5;208mWARNING:\e[0m Have you taken the snapshot of the virtual machine before updating it? [y|N] "
- read ANSWER
+ read -r ANSWER
  if [ "${ANSWER}" != 'y' ]; then
    echo 'Have a nice day!'
    exit 0
@@ -92,7 +107,7 @@ function autoRemove() {
  fi
 
  echo -n -e "\n\e[38;5;208mWARNING:\e[0m Are you sure you want to do this? [y|N] "
- read ANSWER
+ read -r ANSWER
  if [ "${ANSWER}" != 'y' ]; then
    echo 'Have a nice day!'
    exit 0
@@ -169,9 +184,10 @@ case "${1}" in
         version
   ;;
   *)
-  echo 'Options: update |  upgrade | dist-upgrade | autoremove | autoclean | check | showlog'
+  echo -e '\n  Options: update |  upgrade | dist-upgrade | autoremove | autoclean | check | showlog\n'
   ;;
 esac
+
 
 # ## Exit.
 exit 0
