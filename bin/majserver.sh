@@ -5,7 +5,7 @@
 # * Creation:           (c) 2004-2022  Cybionet - Ugly Codes Division
 # *
 # * File:               majserver.sh
-# * Version:            0.1.13c
+# * Version:            0.1.13d
 # *
 # * Comment:            Tool to configure update system.
 # *
@@ -36,7 +36,7 @@ appYear=$(date +%Y)
 
 # ## Application informations.
 appHeader="(c) 2004-${appYear}  Cybionet - Ugly Codes Division"
-readonly appVersion='0.1.13c'
+readonly appVersion='0.1.13d'
 
 
 #############################################################################################
@@ -48,7 +48,7 @@ if [ "${EUID}" -ne 0 ] ; then
   echo -e "\n\n\n\e[33mCAUTION: This script must be run with sudo or as root.\e[0m"
   exit 0
 else
-  echo -e "\n\e[34m${appHeader}\e[0m\n"
+  echo -e "\n\e[34m${appHeader}\e[0m"
   printf '%.s─' $(seq 1 "$(tput cols)")
   echo -e ""
 fi
@@ -184,7 +184,7 @@ case "${1}" in
         version
   ;;
   *)
-  echo -e '\n  Options: update |  upgrade | dist-upgrade | autoremove | autoclean | check | showlog\n'
+  echo -e '\n  Options: update | upgrade | dist-upgrade | autoremove | autoclean | check | showlog\n'
   ;;
 esac
 
