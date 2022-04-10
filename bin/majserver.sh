@@ -2,15 +2,15 @@
 #set -x
 # * **************************************************************************
 # *
-# * Creation:           (c) 2004-2022  Cybionet - Ugly Codes Division
+# * Author:           	(c) 2004-2022  Cybionet - Ugly Codes Division
 # *
 # * File:               majserver.sh
-# * Version:            0.1.13d
+# * Version:            0.1.14
 # *
-# * Comment:            Tool to configure update system.
+# * Description: 	Tool to configure update system.
 # *
 # * Creation: December 16, 2017
-# * Change:   February 13, 2021
+# * Change:   April 10, 2022
 # *
 # * **************************************************************************
 # * chmod 500 majserver.sh
@@ -36,7 +36,7 @@ appYear=$(date +%Y)
 
 # ## Application informations.
 appHeader="(c) 2004-${appYear}  Cybionet - Ugly Codes Division"
-readonly appVersion='0.1.13d'
+readonly appVersion='0.1.14'
 
 
 #############################################################################################
@@ -140,7 +140,7 @@ function showlog() {
 
 # ## Show the version of this app (hidden option).
 function version() {
- echo -e "Version: ${appVersion}\n"
+ echo -e "  Version: ${appVersion}\n"
 }
 
 # ## Check if the system requires a reboot.
@@ -156,35 +156,44 @@ function rebootNeeded() {
 # ## MENU
 
 case "${1}" in
-  update)
+  -upd|update)
         aptUpdate
   ;;
-  upgrade)
+  -upg|upgrade)
         aptUpdate
         aptUpgrade
         rebootNeeded
   ;;
-  distupgrade|dist-upgrade)
+  -dupg|dist-upgrade)
         aptDistUpgrade
         rebootNeeded
   ;;
-  autoremove)
+  -arm|autoremove)
         autoRemove
   ;;
-  autoclean)
+  -cln|autoclean)
         autoClean
   ;;
-  check)
+  -chk|check)
         aptCheck
   ;;
-  showlog)
+  -log|showlog)
        showlog
   ;;
-  version)
+  -ver|version)
         version
   ;;
   *)
-  echo -e '\n  Options: update | upgrade | dist-upgrade | autoremove | autoclean | check | showlog\n'
+  echo -e "\n  Usage: ${0##*/} [options]\n"
+  echo -e '\n  General options:
+    -upd,  [update]\t\t# Download package information from all configured sources.
+    -upg,  [upgrade]\t\t# Install the newest versions of all packages currently installed.
+    -dupg, [dist-upgrade]\t# Upgrade the most important packages, at the expense of those deemed less important.
+    -rm,   [autoremove]\t# Remove packages that were automatically installed to satisfy dependencies for other packages and are now no longer needed.
+    -cln,  [autoclean]\t# Clears out the local repository of retrieved package files.
+    -chk,  [check]\t\t# Updates the package cache and checks for broken dependencies.
+    -log,  [showlog]\t\t# Show log of the program.
+    -ver,  [version]\t\t# Show the program version.\n'
   ;;
 esac
 

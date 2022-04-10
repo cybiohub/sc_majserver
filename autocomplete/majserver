@@ -1,0 +1,11 @@
+_majserver()
+{
+ script_actions='update upgrade dist-upgrade autoremove autoclean check showlog version'
+ local cur
+ COMPREPLY=()
+ cur="${COMP_WORDS[COMP_CWORD]}"
+ COMPREPLY=( $(compgen -W "${script_actions}" -- ${cur}) )
+ return 0
+}
+
+complete -o nospace -F _majserver majserver.sh
