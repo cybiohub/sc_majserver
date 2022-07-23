@@ -1,6 +1,5 @@
-| ![alt text][logo] | Integration & Securite Systeme |
-| ------------- |:-------------:|
-
+![alt text][logo]
+ 
 # Majserver
 This script is used to update Linux systems (Ubuntu and Debian) with the apt-get command. A basic script, but which allows you to,
 
