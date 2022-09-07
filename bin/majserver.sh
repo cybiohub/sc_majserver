@@ -5,12 +5,12 @@
 # * Author:           	(c) 2004-2022  Cybionet - Ugly Codes Division
 # *
 # * File:               majserver.sh
-# * Version:            0.1.14
+# * Version:            0.1.15
 # *
 # * Description: 	Tool to configure update system.
 # *
 # * Creation: December 16, 2017
-# * Change:   April 10, 2022
+# * Change:   September 07, 2022
 # *
 # * **************************************************************************
 # * chmod 500 majserver.sh
@@ -36,7 +36,7 @@ appYear=$(date +%Y)
 
 # ## Application informations.
 appHeader="(c) 2004-${appYear}  Cybionet - Ugly Codes Division"
-readonly appVersion='0.1.14'
+readonly appVersion='0.1.15'
 
 
 #############################################################################################
@@ -47,10 +47,6 @@ if [ "${EUID}" -ne 0 ] ; then
   echo -e "\n\e[34m${appHeader}\e[0m\n"
   echo -e "\n\n\n\e[33mCAUTION: This script must be run with sudo or as root.\e[0m"
   exit 0
-else
-  echo -e "\n\e[34m${appHeader}\e[0m"
-  printf '%.s─' $(seq 1 "$(tput cols)")
-  echo -e ""
 fi
 
 if [ ! -f '/etc/logrotate.d/majserver' ]; then
@@ -77,6 +73,13 @@ function reminderCheck() {
    echo 'Have a nice day!'
    exit 0
  fi
+}
+
+# ## Add header.
+function header() {
+ echo -e "\n\e[34m${appHeader}\e[0m"
+ printf '%.s─' $(seq 1 "$(tput cols)")
+ echo -e ""
 }
 
 # ## Launch update.
@@ -140,7 +143,7 @@ function showlog() {
 
 # ## Show the version of this app (hidden option).
 function version() {
- echo -e "  Version: ${appVersion}\n"
+ echo -e "${appVersion}"
 }
 
 # ## Check if the system requires a reboot.
@@ -157,40 +160,48 @@ function rebootNeeded() {
 
 case "${1}" in
   -upd|update)
+	header
         aptUpdate
   ;;
   -upg|upgrade)
+	header
         aptUpdate
         aptUpgrade
         rebootNeeded
   ;;
   -dupg|dist-upgrade)
+	header
         aptDistUpgrade
         rebootNeeded
   ;;
   -arm|autoremove)
+	header
         autoRemove
   ;;
   -cln|autoclean)
+	header
         autoClean
   ;;
   -chk|check)
+	header
         aptCheck
   ;;
   -log|showlog)
-       showlog
+        header
+        showlog
   ;;
   -ver|version)
         version
   ;;
   *)
+  header
   echo -e "\n  Usage: ${0##*/} [options]\n"
   echo -e '\n  General options:
     -upd,  [update]\t\t# Download package information from all configured sources.
     -upg,  [upgrade]\t\t# Install the newest versions of all packages currently installed.
     -dupg, [dist-upgrade]\t# Upgrade the most important packages, at the expense of those deemed less important.
-    -rm,   [autoremove]\t# Remove packages that were automatically installed to satisfy dependencies for other packages and are now no longer needed.
-    -cln,  [autoclean]\t# Clears out the local repository of retrieved package files.
+    -rm,   [autoremove]\t\t# Remove packages that were automatically installed to satisfy dependencies for other packages and are now no longer needed.
+    -cln,  [autoclean]\t\t# Clears out the local repository of retrieved package files.
     -chk,  [check]\t\t# Updates the package cache and checks for broken dependencies.
     -log,  [showlog]\t\t# Show log of the program.
     -ver,  [version]\t\t# Show the program version.\n'
