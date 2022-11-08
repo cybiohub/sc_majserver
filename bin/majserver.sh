@@ -5,12 +5,12 @@
 # * Author:           	(c) 2004-2022  Cybionet - Ugly Codes Division
 # *
 # * File:               majserver.sh
-# * Version:            0.1.15
+# * Version:            0.1.16
 # *
 # * Description: 	Tool to configure update system.
 # *
 # * Creation: December 16, 2017
-# * Change:   September 07, 2022
+# * Change:   November 09, 2022
 # *
 # * **************************************************************************
 # * chmod 500 majserver.sh
@@ -36,7 +36,7 @@ appYear=$(date +%Y)
 
 # ## Application informations.
 appHeader="(c) 2004-${appYear}  Cybionet - Ugly Codes Division"
-readonly appVersion='0.1.15'
+readonly appVersion='0.1.16'
 
 
 #############################################################################################
@@ -136,6 +136,11 @@ function aptCheck() {
  apt-get check
 }
 
+# ## List upgradable
+function listUpg() {
+ apt list --upgradable
+}
+
 # ## Show the content of the log.
 function showlog() {
  cat "${APTLOG}"
@@ -186,6 +191,10 @@ case "${1}" in
 	header
         aptCheck
   ;;
+  -dry|list)
+        header
+        listUpg
+  ;;
   -log|showlog)
         header
         showlog
@@ -203,6 +212,7 @@ case "${1}" in
     -rm,   [autoremove]\t\t# Remove packages that were automatically installed to satisfy dependencies for other packages and are now no longer needed.
     -cln,  [autoclean]\t\t# Clears out the local repository of retrieved package files.
     -chk,  [check]\t\t# Updates the package cache and checks for broken dependencies.
+    -dry,  [list]\t\t# Display a list of upgradable packages.
     -log,  [showlog]\t\t# Show log of the program.
     -ver,  [version]\t\t# Show the program version.\n'
   ;;

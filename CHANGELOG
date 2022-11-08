@@ -1,5 +1,12 @@
-## [0.1.15] - 2022-09-07
+v0.1.16 - 2022-11-09
+## Added
+  - Add list --upgradable option.
 
-### Change
-- Adjust version display to be supported for deployment by Ansible.
+v0.1.15 - 2022-09-07
+## Change
+  - Adjust version display to be supported for deployment by Ansible.
 
+v0.1.12 - 2021-12-13
+## Added
+  - Fisrt commit.
+  - Added auto-completion.

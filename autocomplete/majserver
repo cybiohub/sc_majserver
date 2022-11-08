@@ -1,6 +1,6 @@
 _majserver()
 {
- script_actions='update upgrade dist-upgrade autoremove autoclean check showlog version'
+ script_actions='update upgrade dist-upgrade autoremove autoclean check  list showlog version'
  local cur
  COMPREPLY=()
  cur="${COMP_WORDS[COMP_CWORD]}"
