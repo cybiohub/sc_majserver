@@ -5,12 +5,12 @@
 # * Author:           	(c) 2004-2022  Cybionet - Ugly Codes Division
 # *
 # * File:               majserver.sh
-# * Version:            0.1.16
+# * Version:            0.1.17
 # *
 # * Description: 	Tool to configure update system.
 # *
 # * Creation: December 16, 2017
-# * Change:   November 09, 2022
+# * Change:   October 05, 2022
 # *
 # * **************************************************************************
 # * chmod 500 majserver.sh
@@ -36,7 +36,7 @@ appYear=$(date +%Y)
 
 # ## Application informations.
 appHeader="(c) 2004-${appYear}  Cybionet - Ugly Codes Division"
-readonly appVersion='0.1.16'
+readonly appVersion='0.1.17'
 
 
 #############################################################################################
@@ -61,6 +61,7 @@ if [ ! -f '/etc/logrotate.d/majserver' ]; then
         create 640 root adm
 }" > /etc/logrotate.d/majserver
 fi
+
 
 #############################################################################################
 # ## FUNCTIONS
@@ -91,15 +92,24 @@ function aptUpdate() {
 # ## Launch upgrade.
 function aptUpgrade() {
  reminderCheck
- apt-get upgrade "${FORCEIPV4}"
+ #apt-get upgrade "${FORCEIPV4}"
+ screen -S "majserver" bash -c "apt-get upgrade ${FORCEIPV4}; echo -e '\n\e[38;5;208mPress enter to exit screen mode\e[0m\n\n'; read -r ANSWER"
  echo "${aptDate} - UpGrade System" >> "${APTLOG}"
 }
 
 # ## Launch dist-upgrade.
 function aptDistUpgrade() {
  reminderCheck
- apt-get dist-upgrade "${FORCEIPV4}"
+ #apt-get dist-upgrade "${FORCEIPV4}"
+ screen -S "majserver" bash -c "apt-get dist-upgrade ${FORCEIPV4}; echo -e '\n\e[38;5;208mPress enter to exit screen mode\e[0m\n\n'; read -r ANSWER"
  echo "${aptDate} - Distribution UpGrade" >> "${APTLOG}"
+}
+
+# ## Launch do-release-upgrade.
+function aptDoReleaseUpgrade() {
+ reminderCheck
+ screen -S "majserver" bash -c "apt-get do-release-upgrade ${FORCEIPV4}; echo -e '\n\e[38;5;208mPress enter to exit screen mode\e[0m\n\n'; read -r ANSWER"
+ echo "${aptDate} - Do Release Upgrade" >> "${APTLOG}"
 }
 
 # ## Launch autoremove.
@@ -179,6 +189,12 @@ case "${1}" in
         aptDistUpgrade
         rebootNeeded
   ;;
+
+  -drg|do-release-upgrade)
+	header
+	aptDoReleaseUpgrade
+	rebootNeeded
+  ;;	
   -arm|autoremove)
 	header
         autoRemove

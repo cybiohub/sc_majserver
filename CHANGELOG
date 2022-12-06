@@ -1,3 +1,8 @@
+v0.1.17 - 2022-12-05
+# ## Added
+  - Launch commands with 'screen' in case the session closes abruptly.
+  - Add do-release-upgrade option (hidden).
+
 v0.1.16 - 2022-11-09
 ## Added
   - Add list --upgradable option.
@@ -8,5 +13,5 @@ v0.1.15 - 2022-09-07
 
 v0.1.12 - 2021-12-13
 ## Added
-  - Fisrt commit.
+  - First commit.
   - Added auto-completion.
