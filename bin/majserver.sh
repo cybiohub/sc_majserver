@@ -26,6 +26,9 @@ readonly APTLOG='/var/log/maj-update.log'
 # ## Force use of IPv4. To disable this option empty the variable.
 readonly FORCEIPV4='-o Acquire::ForceIPv4=true'
 
+# ## Enable protection for update/upgrade using screen if SSH connection is lost.
+readonly screenProtect=1
+
 
 #############################################################################################
 # ## VARIABLES
@@ -93,7 +96,14 @@ function aptUpdate() {
 function aptUpgrade() {
  reminderCheck
  #apt-get upgrade "${FORCEIPV4}"
- screen -S "majserver" bash -c "apt-get upgrade ${FORCEIPV4}; echo -e '\n\e[38;5;208mPress enter to exit screen mode\e[0m\n\n'; read -r ANSWER"
+
+ if [ "${screenProtect}" -eq 1 ]; then
+   screen -S "majserver" bash -c "apt-get upgrade ${FORCEIPV4}; echo -e '\n\e[38;5;208mPress enter to exit screen mode\e[0m\n\n'; read -r ANSWER"
+ else
+   apt-get upgrade "${FORCEIPV4}"
+ fi
+
+
  echo "${aptDate} - UpGrade System" >> "${APTLOG}"
 }
 
@@ -101,14 +111,23 @@ function aptUpgrade() {
 function aptDistUpgrade() {
  reminderCheck
  #apt-get dist-upgrade "${FORCEIPV4}"
- screen -S "majserver" bash -c "apt-get dist-upgrade ${FORCEIPV4}; echo -e '\n\e[38;5;208mPress enter to exit screen mode\e[0m\n\n'; read -r ANSWER"
+ if [ "${screenProtect}" -eq 1 ]; then
+   screen -S "majserver" bash -c "apt-get dist-upgrade ${FORCEIPV4}; echo -e '\n\e[38;5;208mPress enter to exit screen mode\e[0m\n\n'; read -r ANSWER"
+ else
+   apt-get dist-upgrade "${FORCEIPV4}"
+ fi
+
  echo "${aptDate} - Distribution UpGrade" >> "${APTLOG}"
 }
 
 # ## Launch do-release-upgrade.
 function aptDoReleaseUpgrade() {
  reminderCheck
- screen -S "majserver" bash -c "apt-get do-release-upgrade ${FORCEIPV4}; echo -e '\n\e[38;5;208mPress enter to exit screen mode\e[0m\n\n'; read -r ANSWER"
+ if [ "${screenProtect}" -eq 1 ]; then
+   screen -S "majserver" bash -c "apt-get do-release-upgrade ${FORCEIPV4}; echo -e '\n\e[38;5;208mPress enter to exit screen mode\e[0m\n\n'; read -r ANSWER"
+ else
+   echo -e '\n\e[38;5;208mWARNING\e[0m Be sure to use screen, tmux or be local to run this command.\n\n'
+ fi
  echo "${aptDate} - Do Release Upgrade" >> "${APTLOG}"
 }
 
