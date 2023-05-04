@@ -14,7 +14,7 @@ The `majserver.sh` script does not require any additional packages to work.
 
 1. Download files from this repository directly with git or via https.
    ```bash
-   wget -o majserver.zip https://github.com/cybiohub/sc_majserver/archive/refs/heads/main.zip
+   wget -O majserver.zip https://github.com/cybiohub/sc_majserver/archive/refs/heads/main.zip
    ```
 
 2. Unzip the zip file.
