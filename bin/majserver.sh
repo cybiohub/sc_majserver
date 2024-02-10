@@ -173,7 +173,7 @@ function rebootNeeded() {
  lpExist="$(snap list | grep -c canonical-livepatch)"
 
  if [ "${lpExist}" -eq 1 ]; then
-   livePatch="$(canonical-livepatch kernel-upgrade-required)"
+   livePatch="$(canonical-livepatch kernel-upgrade-required 2> /dev/null)"
 
    if [ ! -z "${livePatch}" ]; then
     echo -e "\e[38;5;208mWARNING: Livepatch has fixed kernel vulnerabilities. System restart recommended on the closest maintenance window.\e[0m"
@@ -229,7 +229,6 @@ case "${1}" in
   ;;
   -ver|version)
         version
-	rebootNeeded
   ;;
   *)
   header
