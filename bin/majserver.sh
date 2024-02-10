@@ -175,11 +175,9 @@ function rebootNeeded() {
  if [ "${lpExist}" -eq 1 ]; then
    livePatch="$(canonical-livepatch kernel-upgrade-required)"
 
-   if [ ! -z"${livePatch}" ]; then
+   if [ ! -z "${livePatch}" ]; then
     echo -e "\e[38;5;208mWARNING: Livepatch has fixed kernel vulnerabilities. System restart recommended on the closest maintenance window.\e[0m"
    fi
- else
-  echo "allo"
  fi
 }
 
