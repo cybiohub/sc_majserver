@@ -5,12 +5,12 @@
 # * Author:           	(c) 2004-2022  Cybionet - Ugly Codes Division
 # *
 # * File:               majserver.sh
-# * Version:            0.1.17
+# * Version:            0.1.18
 # *
 # * Description: 	Tool to configure update system.
 # *
 # * Creation: December 16, 2017
-# * Change:   October 05, 2022
+# * Change:   February 10, 2024
 # *
 # * **************************************************************************
 # * chmod 500 majserver.sh
@@ -25,9 +25,6 @@ readonly APTLOG='/var/log/maj-update.log'
 
 # ## Force use of IPv4. To disable this option empty the variable.
 readonly FORCEIPV4='-o Acquire::ForceIPv4=true'
-
-# ## Enable protection for update/upgrade using screen if SSH connection is lost.
-readonly screenProtect=1
 
 
 #############################################################################################
@@ -96,14 +93,7 @@ function aptUpdate() {
 function aptUpgrade() {
  reminderCheck
  #apt-get upgrade "${FORCEIPV4}"
-
- if [ "${screenProtect}" -eq 1 ]; then
-   screen -S "majserver" bash -c "apt-get upgrade ${FORCEIPV4}; echo -e '\n\e[38;5;208mPress enter to exit screen mode\e[0m\n\n'; read -r ANSWER"
- else
-   apt-get upgrade "${FORCEIPV4}"
- fi
-
-
+ screen -S "majserver" bash -c "apt-get upgrade ${FORCEIPV4}; echo -e '\n\e[38;5;208mPress enter to exit screen mode\e[0m\n\n'; read -r ANSWER"
  echo "${aptDate} - UpGrade System" >> "${APTLOG}"
 }
 
@@ -111,23 +101,14 @@ function aptUpgrade() {
 function aptDistUpgrade() {
  reminderCheck
  #apt-get dist-upgrade "${FORCEIPV4}"
- if [ "${screenProtect}" -eq 1 ]; then
-   screen -S "majserver" bash -c "apt-get dist-upgrade ${FORCEIPV4}; echo -e '\n\e[38;5;208mPress enter to exit screen mode\e[0m\n\n'; read -r ANSWER"
- else
-   apt-get dist-upgrade "${FORCEIPV4}"
- fi
-
+ screen -S "majserver" bash -c "apt-get dist-upgrade ${FORCEIPV4}; echo -e '\n\e[38;5;208mPress enter to exit screen mode\e[0m\n\n'; read -r ANSWER"
  echo "${aptDate} - Distribution UpGrade" >> "${APTLOG}"
 }
 
 # ## Launch do-release-upgrade.
 function aptDoReleaseUpgrade() {
  reminderCheck
- if [ "${screenProtect}" -eq 1 ]; then
-   screen -S "majserver" bash -c "apt-get do-release-upgrade ${FORCEIPV4}; echo -e '\n\e[38;5;208mPress enter to exit screen mode\e[0m\n\n'; read -r ANSWER"
- else
-   echo -e '\n\e[38;5;208mWARNING\e[0m Be sure to use screen, tmux or be local to run this command.\n\n'
- fi
+ screen -S "majserver" bash -c "apt-get do-release-upgrade ${FORCEIPV4}; echo -e '\n\e[38;5;208mPress enter to exit screen mode\e[0m\n\n'; read -r ANSWER"
  echo "${aptDate} - Do Release Upgrade" >> "${APTLOG}"
 }
 
@@ -183,8 +164,22 @@ function version() {
 # ## Check if the system requires a reboot.
 # ## Result: 0 (Ok), 1 (Reboot).
 function rebootNeeded() {
+ # ## Restart required requested by the OS.
  if [ -f '/var/run/reboot-required' ]; then
    echo -e "\e[38;5;208mWARNING: A system restart is required.\e[0m"
+ fi
+
+ # ## Restart required requested by snap.
+ lpExist="$(snap list | grep -c canonical-livepatch)"
+
+ if [ "${lpExist}" -eq 1 ]; then
+   livePatch="$(canonical-livepatch kernel-upgrade-required)"
+
+   if [ ! -z"${livePatch}" ]; then
+    echo -e "\e[38;5;208mWARNING: Livepatch has fixed kernel vulnerabilities. System restart recommended on the closest maintenance window.\e[0m"
+   fi
+ else
+  echo "allo"
  fi
 }
 
@@ -236,6 +231,7 @@ case "${1}" in
   ;;
   -ver|version)
         version
+	rebootNeeded
   ;;
   *)
   header
