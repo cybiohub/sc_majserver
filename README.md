@@ -11,12 +11,20 @@ This script is used to update Linux systems (Ubuntu and Debian) with the apt-get
 
 <br>
 
+## INSTALLATION
+
+[Installation procedure](INSTALL.md) 
+
+
+
+<br>
+
 # Control
 To maintain control over updates in the event of a loss of SSH connection, updates are launched in screen. To resume a session, run this command on the concerned machine:
 
-	```bash
-	screen -r majserver
-	```
+```bash
+screen -r majserver
+```
 
 
 <br>
