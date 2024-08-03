@@ -8,12 +8,18 @@ This script is used to update Linux systems (Ubuntu and Debian) with the apt-get
 - Allows better control for technicians unfamiliar with Linux.
 - Prevents the execution of some tasks if a restart of the system is necessary. 
 
+
+<br>
+
 # Control
 To maintain control over updates in the event of a loss of SSH connection, updates are launched in screen. To resume a session, run this command on the concerned machine:
 
 	```bash
 	screen -r majserver
 	```
+
+
+<br>
 
 # Usage
 
