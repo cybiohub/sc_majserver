@@ -2,15 +2,15 @@
 #set -x
 # * **************************************************************************
 # *
-# * Author:           	(c) 2004-2022  Cybionet - Ugly Codes Division
+# * Author:           	(c) 2004-2024  Cybionet - Ugly Codes Division
 # *
 # * File:               majserver.sh
-# * Version:            0.1.18
+# * Version:            0.1.19
 # *
 # * Description: 	Tool to configure update system.
 # *
 # * Creation: December 16, 2017
-# * Change:   February 10, 2024
+# * Change:   August 05, 2024
 # *
 # * **************************************************************************
 # * chmod 500 majserver.sh
@@ -36,7 +36,7 @@ appYear=$(date +%Y)
 
 # ## Application informations.
 appHeader="(c) 2004-${appYear}  Cybionet - Ugly Codes Division"
-readonly appVersion='0.1.17'
+readonly appVersion='0.1.18'
 
 
 #############################################################################################
@@ -169,14 +169,16 @@ function rebootNeeded() {
    echo -e "\e[38;5;208mWARNING: A system restart is required.\e[0m"
  fi
 
- # ## Restart required requested by snap.
- lpExist="$(snap list | grep -c canonical-livepatch)"
+ # ## Restart required requested by snapd.
+ if dpkg-query -s "snapd" > /dev/null 2>&1; then
+   lpExist="$(snap list | grep -c canonical-livepatch)"
 
- if [ "${lpExist}" -eq 1 ]; then
-   livePatch="$(canonical-livepatch kernel-upgrade-required 2> /dev/null)"
+   if [ "${lpExist}" -eq 1 ]; then
+     livePatch="$(canonical-livepatch kernel-upgrade-required 2> /dev/null)"
 
-   if [ ! -z "${livePatch}" ]; then
-    echo -e "\e[38;5;208mWARNING: Livepatch has fixed kernel vulnerabilities. System restart recommended on the closest maintenance window.\e[0m"
+     if [ ! -z "${livePatch}" ]; then
+       echo -e "\e[38;5;208mWARNING: Livepatch has fixed kernel vulnerabilities. System restart recommended on the closest maintenance window.\e[0m"
+     fi
    fi
  fi
 }
