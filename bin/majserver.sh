@@ -2,15 +2,15 @@
 #set -x
 # * **************************************************************************
 # *
-# * Author:           	(c) 2004-2024  Cybionet - Ugly Codes Division
+# * Author:           	(c) 2004-2025  Cybionet - Ugly Codes Division
 # *
 # * File:               majserver.sh
-# * Version:            0.1.19
+# * Version:            0.1.20
 # *
 # * Description: 	Tool to configure update system.
 # *
 # * Creation: December 16, 2017
-# * Change:   August 05, 2024
+# * Change:   December 17, 2024
 # *
 # * **************************************************************************
 # * chmod 500 majserver.sh
@@ -30,13 +30,13 @@ readonly FORCEIPV4='-o Acquire::ForceIPv4=true'
 #############################################################################################
 # ## VARIABLES
 
-# ## Retrieval of date and year
+# ## Retrieval of date and year.
 aptDate=$(date +'%b %d %H:%M:%S')
 appYear=$(date +%Y)
 
 # ## Application informations.
 appHeader="(c) 2004-${appYear}  Cybionet - Ugly Codes Division"
-readonly appVersion='0.1.19'
+readonly appVersion='0.1.20'
 
 
 #############################################################################################
@@ -146,7 +146,7 @@ function aptCheck() {
  apt-get check
 }
 
-# ## List upgradable
+# ## List upgradable.
 function listUpg() {
  apt list --upgradable
 }
@@ -171,7 +171,7 @@ function rebootNeeded() {
 
  # ## Restart required requested by snapd.
  if dpkg-query -s "snapd" > /dev/null 2>&1; then
-   lpExist="$(snap list | grep -c canonical-livepatch)"
+   lpExist="$(snap list 2> /dev/null | grep -c canonical-livepatch)"
 
    if [ "${lpExist}" -eq 1 ]; then
      livePatch="$(canonical-livepatch kernel-upgrade-required 2> /dev/null)"
